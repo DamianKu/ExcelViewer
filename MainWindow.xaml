@@ -1,0 +1,101 @@
+﻿<Window x:Class="ExcelViewerV2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ExcelViewerV2.Controls"
+        Title="Excel Viewer" Height="600" Width="1000">
+
+    <DockPanel>
+
+        <!-- TOOLBAR -->
+
+<Menu DockPanel.Dock="Top">
+    <!-- Menu Plik -->
+    <MenuItem Header="_Plik">
+        <MenuItem Header="_Nowy" Click="NewButton_Click"/>
+        <MenuItem Header="_Otwórz" Click="OpenButton_Click"/>
+        <MenuItem Header="_Zapisz" Click="SaveButton_Click"/>
+        <MenuItem Header="Zapisz _jako" Click="SaveAsButton_Click"/>
+        <MenuItem Header="_Drukuj" Click="PrintButton_Click"/>
+
+    </MenuItem>
+
+    <!-- Menu Edycja -->
+    <MenuItem Header="_Edycja">
+        <MenuItem Header="_Szukaj" Click="SearchButton_Click"/>
+        <Separator/>
+        <MenuItem Header="_Cofnij" InputGestureText="Ctrl+Z" Click="Undo_Click"/>
+        <MenuItem Header="_Przywróć" InputGestureText="Ctrl+Y" Click="Redo_Click"/>
+    </MenuItem>
+</Menu>
+
+
+        <!-- PASEK ARKUSZY + POZIOMY SCROLL -->
+        <Grid DockPanel.Dock="Bottom" Height="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/> <!-- 60% szerokości dla guzików arkuszy -->
+                <ColumnDefinition Width="4*"/> <!-- 40% szerokości dla poziomego paska przewijania -->
+            </Grid.ColumnDefinitions>
+
+            <!-- ScrollViewer dla guzików arkuszy -->
+            <ScrollViewer Name="SheetScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          Grid.Column="0">
+                <DockPanel LastChildFill="False">
+                    <StackPanel Orientation="Horizontal" Name="SheetPanel" DockPanel.Dock="Left"/>
+                    <Button Name="LeftArrow" Content="◀" Width="20" Click="LeftArrow_Click"
+                             VerticalAlignment="Center"/>
+                    <Button Name="RightArrow" Content="▶" Width="20" VerticalAlignment="Center" Click="RightArrow_Click"/>
+                </DockPanel>
+            </ScrollViewer>
+
+            <!-- Pasek przewijania poziomego arkusza -->
+            <ScrollBar Grid.Column="1"
+                       Name="ExcelHorizontalScrollBar"
+                       Orientation="Horizontal"
+                       Minimum="0"
+                       Maximum="40"
+                       ValueChanged="ExcelHorizontalScrollBar_ValueChanged"/>
+        </Grid>
+
+        <!-- ARKUSZ Z NAGŁÓWKAMI -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/> <!-- nagłówek kolumn -->
+                <RowDefinition Height="*"/>  <!-- arkusz -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/> <!-- nagłówek wierszy -->
+                <ColumnDefinition Width="*"/>  <!-- arkusz -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Górny lewy róg -->
+            <Border Grid.Row="0" Grid.Column="0" Background="LightGray"/>
+
+            <!-- Nagłówki kolumn -->
+            <ScrollViewer Grid.Row="0" Grid.Column="1"
+                          Name="ColumnHeaderScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden">
+                <StackPanel Orientation="Horizontal" Name="ColumnHeaderPanel" Background="LightGray"/>
+            </ScrollViewer>
+
+            <!-- Nagłówki wierszy -->
+            <ScrollViewer Grid.Row="1" Grid.Column="0"
+                          Name="RowHeaderScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden">
+                <StackPanel Orientation="Vertical" Name="RowHeaderPanel" Background="LightGray"/>
+            </ScrollViewer>
+
+            <!-- Główny arkusz -->
+            <ScrollViewer Grid.Row="1" Grid.Column="1"
+                          Name="ScrollViewerGrid"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Auto"
+                          ScrollChanged="ScrollViewerGrid_ScrollChanged">
+                <local:ExcelLikeGrid x:Name="ExcelGrid"/>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>
