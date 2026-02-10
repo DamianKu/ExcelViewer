@@ -1,0 +1,154 @@
+﻿<Window x:Class="ExcelViewerV2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ExcelViewerV2.Controls"
+        Title="Excel Viewer"
+        Height="600"
+        Width="1000">
+
+    <DockPanel>
+
+        <!-- ================= MENU ================= -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Plik">
+                <MenuItem Header="_Nowy"
+                          Command="{Binding NewCommand}"/>
+
+                <MenuItem Header="_Otwórz"
+                          Command="{Binding OpenCommand}"/>
+
+                <MenuItem Header="_Zapisz"
+                          Command="{Binding SaveCommand}"/>
+
+                <MenuItem Header="Zapisz _jako"
+                          Command="{Binding SaveAsCommand}"/>
+
+                <MenuItem Header="_Drukuj"
+                          Command="{Binding PrintCommand}"/>
+            </MenuItem>
+
+            <MenuItem Header="_Edycja">
+                <MenuItem Header="_Szukaj"
+                          Command="{Binding SearchCommand}"/>
+
+                <Separator/>
+
+                <MenuItem Header="_Cofnij"
+                          InputGestureText="Ctrl+Z"
+                          Command="{Binding UndoCommand}"/>
+
+                <MenuItem Header="_Przywróć"
+                          InputGestureText="Ctrl+Y"
+                          Command="{Binding RedoCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- ================= DÓŁ: TABS + SCROLL ================= -->
+        <Grid DockPanel.Dock="Bottom" Height="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Tabs -->
+            <ScrollViewer Grid.Column="0"
+                          Name="SheetScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          Background="Transparent">
+
+                <DockPanel LastChildFill="False">
+
+                    <StackPanel Orientation="Horizontal"
+                                Name="SheetPanel"
+                                DockPanel.Dock="Left"/>
+
+<Button Name="LeftArrow"
+        Content="◀"
+        Width="20"
+        Command="{Binding ScrollLeftCommand}"
+        VerticalAlignment="Center"/>
+
+<Button Name="RightArrow"
+        Content="▶"
+        Width="20"
+        Command="{Binding ScrollRightCommand}"
+        VerticalAlignment="Center"/>
+
+                </DockPanel>
+            </ScrollViewer>
+
+            <!-- ScrollBar -->
+            <ScrollBar Grid.Column="1"
+                       Name="ExcelHorizontalScrollBar"
+                       Orientation="Horizontal"
+                       Minimum="0"
+                       Maximum="0"
+                       ValueChanged="ExcelHorizontalScrollBar_ValueChanged"/>
+        </Grid>
+
+        <!-- ================= GRID AREA ================= -->
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Lewy górny róg -->
+            <Border Grid.Row="0"
+                    Grid.Column="0"
+                    Background="LightGray"
+                    Name="TopLeftCorner"/>
+
+            <!-- Nagłówki kolumn -->
+            <ScrollViewer Grid.Row="0"
+                          Grid.Column="1"
+                          Name="ColumnHeaderScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden"
+                          Background="Transparent">
+
+                <StackPanel Orientation="Horizontal"
+                            Name="ColumnHeaderPanel"
+                            Background="LightGray"/>
+
+            </ScrollViewer>
+
+            <!-- Nagłówki wierszy -->
+            <ScrollViewer Grid.Row="1"
+                          Grid.Column="0"
+                          Name="RowHeaderScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden"
+                          Background="Transparent">
+
+                <StackPanel Orientation="Vertical"
+                            Name="RowHeaderPanel"
+                            Background="LightGray"/>
+
+            </ScrollViewer>
+
+            <!-- MAIN SCROLL -->
+            <ScrollViewer Grid.Row="1"
+                          Grid.Column="1"
+                          Name="ScrollViewerGrid"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Auto"
+                          CanContentScroll="True"
+                          Background="Transparent"
+                          ScrollChanged="ScrollViewerGrid_ScrollChanged">
+
+                <local:ExcelLikeGrid x:Name="ExcelGrid"/>
+
+            </ScrollViewer>
+
+        </Grid>
+
+    </DockPanel>
+</Window>
